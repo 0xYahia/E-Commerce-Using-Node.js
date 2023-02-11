@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const slugify = require("slugify");
-const SubCategory = require("../models/subcCategoryModel");
-const ApiError = require("../utlis/apiError");
+const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
+const SubCategory = require('../models/subcCategoryModel');
+const ApiError = require('../utlis/apiError');
 // const ApiError = require("../utlis/apiError");
 
 exports.setCategoryIdToBody = (req, res, next) => {

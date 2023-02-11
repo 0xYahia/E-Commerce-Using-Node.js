@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const {
   getproducts,
@@ -6,19 +6,19 @@ const {
   getProduct,
   updateProduct,
   deleteProduct,
-} = require("../services/productService");
+} = require('../services/productService');
 const {
   createPoductValidator,
   getProductValidator,
   updateProductValidator,
   deleteProductValidator,
-} = require("../utlis/validators/productValidator");
+} = require('../utlis/validators/productValidator');
 
 const router = express.Router();
 
-router.route("/").get(getproducts).post(createPoductValidator, createProduct);
+router.route('/').get(getproducts).post(createPoductValidator, createProduct);
 router
-  .route("/:id")
+  .route('/:id')
   .get(getProductValidator, getProduct)
   .put(updateProductValidator, updateProduct)
   .delete(deleteProductValidator, deleteProduct);

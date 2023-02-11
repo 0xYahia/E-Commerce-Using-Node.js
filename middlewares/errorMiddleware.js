@@ -1,7 +1,7 @@
 const globalError = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
-  if (process.env.NODE_ENV === "development") {
+  err.status = err.status || 'error';
+  if (process.env.NODE_ENV === 'development') {
     // eslint-disable-next-line no-use-before-define
     sendErrorForDev(err, res);
   } else {

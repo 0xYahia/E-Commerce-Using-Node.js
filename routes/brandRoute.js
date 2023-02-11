@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const {
   getBrands,
@@ -6,19 +6,19 @@ const {
   createBrand,
   updateBrand,
   deleteBrand,
-} = require("../services/brandService");
+} = require('../services/brandService');
 const {
   getBrandValidator,
   createBrandValidator,
   updateBrandValidator,
   deleteBrandValidator,
-} = require("../utlis/validators/brandValidator");
+} = require('../utlis/validators/brandValidator');
 
 const router = express.Router();
 
-router.route("/").get(getBrands).post(createBrandValidator, createBrand);
+router.route('/').get(getBrands).post(createBrandValidator, createBrand);
 router
-  .route("/:id")
+  .route('/:id')
   .get(getBrandValidator, getBrand)
   .put(updateBrandValidator, updateBrand)
   .delete(deleteBrandValidator, deleteBrand);

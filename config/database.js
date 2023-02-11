@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-mongoose.set("strictQuery", false);
+mongoose.set('strictQuery', false);
 const dbConnection = () => {
-  mongoose.connect(process.env.DB_URI).then((conn) => {
-    console.log(`Database Connected: ${conn.connection.host}`);
-  });
-  // .catch((err) => {
-  //   console.error(`Database Error: ${err}`);
-  //   process.exit(1);
-  // });
+  mongoose
+    .connect(
+      'mongodb+srv://Yahia:5zWu1tXNnkqiJ9dI@cluster0.z0wznpm.mongodb.net/E-Commerce'
+    )
+    .then((conn) => {
+      console.log(`Database Connected: ${conn.connection.host}`);
+    });
 };
 
 module.exports = dbConnection;
