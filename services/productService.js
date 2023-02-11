@@ -1,20 +1,26 @@
-const asyncHandler = require("express-async-handler");
-const slugify = require("slugify");
-const Product = require("../models/productModel");
-const ApiError = require("../utlis/apiError");
+const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
+const Product = require('../models/productModel');
+const ApiError = require('../utlis/apiError');
 
 // @des Get list of Products
 // @route GET /api/v1/products
 // @access Public
 exports.getproducts = asyncHandler(async (req, res) => {
+  // 1) Filtering
+  const queryStringObj = { ...req.query };
+  const excludersFields = ['page', 'sort', 'limit', 'fields'];
+  excludersFields.forEach((field) => delete queryStringObj[field]);
+
+  // 2) Pagination
   const page = req.query.page * 1 || 1;
   const limit = req.query.limit * 1 || 4;
   const skip = (page - 1) * limit;
 
-  const products = await Product.find({})
+  const products = await Product.find(queryStringObj)
     .skip(skip)
     .limit(limit)
-    .populate({ path: "category", select: "name -_id" });
+    .populate({ path: 'category', select: 'name -_id' });
   res.status(200).json({
     result: products.length,
     page,
@@ -30,8 +36,8 @@ exports.getproducts = asyncHandler(async (req, res) => {
 exports.getProduct = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const product = await Product.findById(id).populate({
-    path: "category",
-    select: "name -_id",
+    path: 'category',
+    select: 'name -_id',
   });
   if (!product) {
     return next(new ApiError(`No product for this id ${id}`, 404));

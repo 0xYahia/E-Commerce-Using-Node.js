@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 const {
   createSubCategories,
@@ -8,13 +8,13 @@ const {
   deleteSubCategory,
   setCategoryIdToBody,
   cerateFilterObf,
-} = require("../services/subCategoryService");
+} = require('../services/subCategoryService');
 const {
   createSubCategoryValidator,
   getSubCategoryValidator,
   updateSubCategoryValidator,
   deleteSubCategoryValidator,
-} = require("../utlis/validators/subCategoryValidator");
+} = require('../utlis/validators/subCategoryValidator');
 
 // mergeParams: Allow us to access parameters on other routers
 // ex: We need to access categoryId from category router
@@ -22,11 +22,11 @@ const {
 const router = express.Router({ mergeParams: true });
 
 router
-  .route("/")
+  .route('/')
   .post(setCategoryIdToBody, createSubCategoryValidator, createSubCategories)
   .get(cerateFilterObf, getSubCategories);
 router
-  .route("/:id")
+  .route('/:id')
   .get(getSubCategoryValidator, getSubCategory)
   .put(updateSubCategoryValidator, updateSubCategory)
   .delete(deleteSubCategoryValidator, deleteSubCategory);

@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const slugify = require("slugify");
-const Category = require("../models/categoryModel");
-const ApiError = require("../utlis/apiError");
+const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
+const Category = require('../models/categoryModel');
+const ApiError = require('../utlis/apiError');
 
 // @des Get list of Categories
 // @route GET /api/v1/categories

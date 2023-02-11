@@ -1,7 +1,7 @@
-const asyncHandler = require("express-async-handler");
-const slugify = require("slugify");
-const Brand = require("../models/brandModel");
-const ApiError = require("../utlis/apiError");
+const asyncHandler = require('express-async-handler');
+const slugify = require('slugify');
+const Brand = require('../models/brandModel');
+const ApiError = require('../utlis/apiError');
 
 // @des Get list of brands
 // @route GET /api/v1/brands
