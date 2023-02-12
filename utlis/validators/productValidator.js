@@ -79,61 +79,38 @@ exports.createPoductValidator = [
           }
         })
     )
-    .custom((val, { req }) =>
-      subCategories
-        .find({ category: req.body.category })
-        .then((subcategories) => {
-          const subCategoriesIdsInDB = [];
-          subcategories.forEach((subCategory) => {
-            subCategoriesIdsInDB.push(subCategory._id.toString());
-          });
-          // check if subcategories ids in db include subcategories in req.body (true)
-          const checker = (target, arr) => target.every((v) => arr.includes(v));
-          if (!checker(val, subCategoriesIdsInDB)) {
-            return Promise.reject(
-              new Error(`subcategories not belong to category`)
-            );
-          }
-        })
-    ),
-  // .custom((val, { req }) => {
-  //   subCategories
-  //     .find({ category: req.body.category })
-  //     .then((subcategories) => {
-  //       const subCateogriesIdsInDB = [];
-  //       subcategories.forEach((subCategory) => {
-  //         subCateogriesIdsInDB.push(subCategory._id.toString());
-  //       });
-  //       // check if subcategories ids in db include subcategories in req.body (true / false)
-  //       const checker = (target, arr) => target.every((v) => arr.includes(v));
-  //       if (!checker(val, subCateogriesIdsInDB)) {
-  //         return Promise.reject(
-  //           new Error(`subcategories not belong to category`)
-  //         );
-  //       }
-  //     });
-  // }),
-  // .custom(async (val, { req }) => {
-  //   const subcategory = await subCategories.find({
-  //     category: req.body.category,
-  //   });
-  //   const subCategoriesIdsInDB = [];
-  //   subcategory.forEach((subCaegory) => {
-  //     subCategoriesIdsInDB.push(subCaegory._id.toString());
-  //   });
-  //   console.log(subCategoriesIdsInDB);
-  //   // check if subcategories ids in db include subcategories in req.body (true)
-  //   const checker = val.every((v) => {
-  //     subCategoriesIdsInDB.includes(v);
-  //   });
-  // check if subcategories ids in db include subcategories in req.body (true)
-  // const checker = (target, arr) => target.every((v) => arr.includes(v));
-  // if (!checker(val, subCategoriesIdsInDB)) {
-  //   return Promise.reject(
-  //     new Error(`subcategories not belong to category`)
-  //   );
-  // }
-  // }),
+    // .custom((val, { req }) =>
+    //   subCategories
+    //     .find({ category: req.body.category })
+    //     .then((subcategories) => {
+    //       const subCateogriesIdsInDB = [];
+    //       subcategories.forEach((subCategory) => {
+    //         subCateogriesIdsInDB.push(subCategory._id.toString());
+    //       });
+    //       // check if subcategories ids in db include subcategories in req.body (true / false)
+    //       const checker = (target, arr) => target.every((v) => arr.includes(v));
+    //       if (!checker(val, subCateogriesIdsInDB)) {
+    //         return Promise.reject(
+    //           new Error(`subcategories not belong to category`)
+    //         );
+    //       }
+    //     })
+    // )
+    .custom(async (val, { req }) => {
+      const subcategory = await subCategories.find({
+        category: req.body.category,
+      });
+      const subCategoriesIdsInDB = [];
+      subcategory.forEach((subCaegory) => {
+        subCategoriesIdsInDB.push(subCaegory._id.toString());
+      });
+      // check if subcategories ids in db include subcategories in req.body (true)
+      const checker = (target, arr) => target.every((v) => arr.includes(v));
+      if (!checker(val, subCategoriesIdsInDB)) {
+        throw new Error(`subcategories not belong to category`);
+      }
+      return true;
+    }),
   check('ratingsAverage')
     .optional()
     .isNumeric()
