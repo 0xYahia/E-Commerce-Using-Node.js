@@ -1,5 +1,6 @@
 /* eslint-disable array-callback-return */
-const { check } = require('express-validator');
+const slugify = require('slugify');
+const { check, body } = require('express-validator');
 const validatorMiddleware = require('../../middlewares/validatorMiddleware');
 const Category = require('../../models/categoryModel');
 const subCategories = require('../../models/subcCategoryModel');
@@ -10,7 +11,11 @@ exports.createPoductValidator = [
     .isLength({ min: 3 })
     .withMessage('must be at least 3 chars')
     .notEmpty()
-    .withMessage('Product title is required'),
+    .withMessage('Product title is required')
+    .custom((val, { req }) => {
+      req.body.slug = slugify(val);
+      return true;
+    }),
   check('description')
     .notEmpty()
     .withMessage('Product description is required')
@@ -215,6 +220,12 @@ exports.updateProductValidator = [
     .optional()
     .isNumeric()
     .withMessage('ratingQuantity must be a number'),
+  body('title')
+    .optional()
+    .custom((val, { req }) => {
+      req.body.slug = slugify(val);
+      return true;
+    }),
   validatorMiddleware,
 ];
 
