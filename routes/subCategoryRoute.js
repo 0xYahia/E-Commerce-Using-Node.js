@@ -1,13 +1,13 @@
 const express = require('express');
 
 const {
-  createSubCategories,
+  createSubCategory,
   getSubCategories,
   getSubCategory,
   updateSubCategory,
   deleteSubCategory,
   setCategoryIdToBody,
-  cerateFilterObf,
+  cerateFilterObj,
 } = require('../services/subCategoryService');
 const {
   createSubCategoryValidator,
@@ -23,8 +23,8 @@ const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .post(setCategoryIdToBody, createSubCategoryValidator, createSubCategories)
-  .get(cerateFilterObf, getSubCategories);
+  .post(setCategoryIdToBody, createSubCategoryValidator, createSubCategory)
+  .get(cerateFilterObj, getSubCategories);
 router
   .route('/:id')
   .get(getSubCategoryValidator, getSubCategory)
