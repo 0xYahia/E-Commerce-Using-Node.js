@@ -4,8 +4,8 @@ class ApiFeatures {
     this.queryStr = queryStr;
   }
 
+  // 1) Filtering
   filter() {
-    // 1) Filtering
     const queryStringObj = { ...this.queryStr };
     const excludersFields = ['page', 'sort', 'limit', 'fields', 'keyword'];
     excludersFields.forEach((field) => delete queryStringObj[field]);
@@ -13,13 +13,14 @@ class ApiFeatures {
     // Apply filteration using [gte, gt, lte, lt]
     let queryStr = JSON.stringify(queryStringObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+    console.log(JSON.parse(queryStr));
 
     this.mongooseQuery = this.mongooseQuery.find(JSON.parse(queryStr));
     return this;
   }
 
+  // 3) Sorting
   sort() {
-    // 3) Sorting
     if (this.queryStr.sort) {
       const sortBy = this.queryStr.sort.split(',').join(' ');
       this.mongooseQuery = this.mongooseQuery.sort(sortBy);
@@ -30,8 +31,8 @@ class ApiFeatures {
     return this;
   }
 
+  // 4) Fields Limiting
   limitFields() {
-    // 4) Fields Limiting
     if (this.queryStr.fields) {
       const fields = this.queryStr.fields.split(',').join(' ');
       this.mongooseQuery = this.mongooseQuery.select(fields);
@@ -42,8 +43,8 @@ class ApiFeatures {
     return this;
   }
 
+  // 5) Search
   search(modelName) {
-    // 5) Search
     if (this.queryStr.keyword) {
       let query = {};
       if (modelName === 'Product') {
@@ -60,8 +61,8 @@ class ApiFeatures {
     return this;
   }
 
+  // 2) Pagination
   pagination(countDocuments) {
-    // 2) Pagination
     const page = this.queryStr.page * 1 || 1;
     const limit = this.queryStr.limit * 1 || 50;
     const skip = (page - 1) * limit;

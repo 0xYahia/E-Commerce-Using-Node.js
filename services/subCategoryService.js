@@ -9,8 +9,6 @@ exports.setCategoryIdToBody = (req, res, next) => {
 
 // Nested route
 // GET /api/v1/categories/:categoryId/subcategories
-// GET /api/v1/proudcts/:productId/reviews
-
 exports.cerateFilterObj = (req, res, next) => {
   let filterObject = {};
   if (req.params.categoryId) filterObject = { category: req.params.categoryId };
