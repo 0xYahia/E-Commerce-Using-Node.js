@@ -4,6 +4,10 @@ const ApiFeatures = require('../utlis/apiFeatures');
 
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {
+    if (req.body.active === true) {
+      // eslint-disable-next-line no-unused-expressions
+      req.body.active === false;
+    }
     const { id } = req.params;
     const document = await Model.findByIdAndDelete(id);
     if (!document) {
