@@ -8,7 +8,7 @@ const reviewSchema = new mongoose.Schema(
     ratings: {
       type: Number,
       min: [1, 'Min ratings value i 1.0'],
-      max: [1, 'Max ratings value i 1.0'],
+      max: [5, 'Max ratings value i 5.0'],
     },
     user: {
       type: mongoose.Schema.ObjectId,

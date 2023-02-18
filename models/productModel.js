@@ -76,4 +76,29 @@ productSchema.pre(/^find/, function (next) {
   next();
 });
 
+const setImageUrl = (doc) => {
+  if (doc.imageCover) {
+    const imageUrl = `${process.env.BASE_URL}/products/${doc.imageCover}`;
+    doc.imageCover = imageUrl;
+  }
+  if (doc.images) {
+    const listImages = [];
+    doc.images.forEach((img) => {
+      const imageUrl = `${process.env.BASE_URL}/products/${img}`;
+      listImages.push(imageUrl);
+    });
+    doc.images = listImages;
+  }
+};
+
+// findOne, findAll and update
+productSchema.post('init', (doc) => {
+  setImageUrl(doc);
+});
+
+// create
+productSchema.post('save', (doc) => {
+  setImageUrl(doc);
+});
+
 module.exports = mongoose.model('Product', productSchema);
