@@ -1,9 +1,11 @@
+const path = require('path');
+
 const express = require('express');
 const morgan = require('morgan');
 
 const dotenv = require('dotenv');
 
-dotenv.config({ path: '/config.env' });
+dotenv.config({ path: 'config.env' });
 
 const dbConnection = require('./config/database');
 const ApiError = require('./utlis/apiError');
@@ -23,6 +25,8 @@ dbConnection();
 const app = express();
 // Middlewares
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -44,7 +48,7 @@ app.all('*', (req, res, next) => {
 // Global error handling middleware for express
 app.use(globalError);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 const server = app.listen(port, () => {
   console.log(`App Running on port ${port}`);

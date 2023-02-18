@@ -23,7 +23,7 @@ exports.createSubCategoryValidator = [
     .notEmpty()
     .withMessage('subCategory must be belong to category')
     .isMongoId()
-    .withMessage('Invalid Subcategory id format'),
+    .withMessage('Invalid category id format'),
   validatorMiddleware,
 ];
 
