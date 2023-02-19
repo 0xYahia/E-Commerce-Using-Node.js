@@ -1,6 +1,7 @@
 const slugify = require('slugify');
 const { check, body } = require('express-validator');
 const validatorMiddleware = require('../../middlewares/validatorMiddleware');
+const Category = require('../../models/categoryModel');
 
 exports.getCategoryValidator = [
   check('id').isMongoId().withMessage('Invalid category id format'),
@@ -17,6 +18,13 @@ exports.createCategoryValidator = [
     .withMessage('Too long name')
     .custom((val, { req }) => {
       req.body.slug = slugify(val);
+      return true;
+    })
+    .custom(async (val, { req }) => {
+      const category = await Category.findOne({ name: val });
+      if (category) {
+        throw new Error('This category is found');
+      }
       return true;
     }),
   validatorMiddleware,

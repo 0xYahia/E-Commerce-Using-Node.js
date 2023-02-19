@@ -7,22 +7,22 @@ const factory = require('./handlerFactory');
 
 // @des Get list of users
 // @route GET /api/v1/users
-// @access Private
+// @access Private/Admin-Manager
 exports.getUsers = factory.getAll(User);
 
 // @des Get specific user by Id
 // @route GET /api/v1/users/:id
-// @access Public
+// @access Public/Admin
 exports.getUser = factory.getOne(User);
 
 // @des Create user
 // @route POST /api/v1/users
-// @access Private
+// @access Private/Admin
 exports.createUser = factory.createOne(User);
 
 // @des update specific user by Id
 // @route PUT /api/v1/users/:id
-// @access Private
+// @access Private/Admin
 exports.updateUser = asyncHandler(async (req, res, next) => {
   const document = await User.findByIdAndUpdate(
     req.params.id,
@@ -49,6 +49,7 @@ exports.changeUserPassword = asyncHandler(async (req, res, next) => {
     req.params.id,
     {
       password: await bcrypt.hash(req.body.password, 12),
+      passwordChangedAt: Date.now(),
     },
     {
       new: true,
@@ -62,5 +63,5 @@ exports.changeUserPassword = asyncHandler(async (req, res, next) => {
 
 // @des delete specific user by Id
 // @route DELETE /api/v1/users/:id
-// @access Private
+// @access Private/Admin
 exports.deleteUser = factory.deleteOne(User);
