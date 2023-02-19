@@ -1,5 +1,7 @@
 const slugify = require('slugify');
-const { check } = require('express-validator');
+const bcrypt = require('bcryptjs');
+const { check, body } = require('express-validator');
+
 const validatorMiddleware = require('../../middlewares/validatorMiddleware');
 const User = require('../../models/userModel');
 
@@ -141,6 +143,43 @@ exports.updateUserValidator = [
 
   check('profileImg').optional(),
   check('role').optional(),
+  validatorMiddleware,
+];
+
+exports.changeUserPasswordValidator = [
+  check('id').isMongoId().withMessage('Invalid User id format'),
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('You must enter your current password'),
+  body('passwordConfirm')
+    .notEmpty()
+    .withMessage('You must enter the password confirm'),
+  check('password')
+    .notEmpty()
+    .withMessage('You must enter new password')
+    .custom(async (val, { req }) => {
+      // 1) Verfiy current password
+      const user = await User.findById({ _id: req.params.id });
+      if (!user) {
+        throw new Error('Ther is no user for this id');
+      }
+      const isCorrectPassword = await bcrypt.compare(
+        req.body.currentPassword,
+        user.password
+      );
+      console.log(req.body.currentPassword);
+      console.log(req.body.password);
+      console.log(req.body.isCorrectPassword);
+      if (!isCorrectPassword) {
+        throw new Error('Incorrect current password');
+      }
+
+      //2) Verfiy password confirm
+      if (val !== req.body.passwordConfirm) {
+        throw new Error('Password Confirmation incorrect');
+      }
+      return true;
+    }),
   validatorMiddleware,
 ];
 
