@@ -14,7 +14,7 @@ const {
   createBrandValidator,
   updateBrandValidator,
   deleteBrandValidator,
-} = require('../utlis/validators/brandValidator');
+} = require('../utils/validators/brandValidator');
 
 const authService = require('../services/authService');
 
