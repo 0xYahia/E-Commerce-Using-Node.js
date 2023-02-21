@@ -17,7 +17,6 @@ const {
 } = require('../utils/validators/userValidator');
 
 const authService = require('../services/authService');
-const { route } = require('./authRoute');
 
 const router = express.Router();
 router.put(
