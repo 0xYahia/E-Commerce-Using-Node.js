@@ -6,6 +6,7 @@ const {
   updateUser,
   deleteUser,
   changeUserPassword,
+  getLoggedUserData,
 } = require('../services/userService');
 
 const {
@@ -16,6 +17,7 @@ const {
 } = require('../utils/validators/userValidator');
 
 const authService = require('../services/authService');
+const { route } = require('./authRoute');
 
 const router = express.Router();
 router.put(
@@ -24,6 +26,7 @@ router.put(
   changeUserPassword
 );
 
+router.get('/getMe', authService.protect, getLoggedUserData, getUser);
 router
   .route('/')
   .get(authService.protect, authService.allowedTo('admin', 'manager'), getUsers)
