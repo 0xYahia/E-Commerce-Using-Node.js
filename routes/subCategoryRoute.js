@@ -14,7 +14,7 @@ const {
   getSubCategoryValidator,
   updateSubCategoryValidator,
   deleteSubCategoryValidator,
-} = require('../utlis/validators/subCategoryValidator');
+} = require('../utils/validators/subCategoryValidator');
 
 const authService = require('../services/authService');
 // mergeParams: Allow us to access parameters on other routers

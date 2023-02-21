@@ -13,7 +13,7 @@ const {
   getUserValidator,
   deleteUserValidator,
   changeUserPasswordValidator,
-} = require('../utlis/validators/userValidator');
+} = require('../utils/validators/userValidator');
 
 const authService = require('../services/authService');
 

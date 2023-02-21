@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler');
-const ApiError = require('../utlis/apiError');
-const ApiFeatures = require('../utlis/apiFeatures');
+const ApiError = require('../utils/apiError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 exports.deleteOne = (Model) =>
   asyncHandler(async (req, res, next) => {

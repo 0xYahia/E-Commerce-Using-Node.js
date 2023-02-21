@@ -1,9 +1,12 @@
+const crypto = require('crypto');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 
 const User = require('../models/userModel');
-const ApiError = require('../utlis/apiError');
+const ApiError = require('../utils/apiError');
+const sendEmail = require('../utils/sendEmail');
 
 const generateToken = (payload) =>
   jwt.sign({ userId: payload }, process.env.JWT_SECRET_KEY, {
@@ -114,3 +117,108 @@ exports.allowedTo = (...roles) =>
     }
     next();
   });
+
+// @desc    Forgot password
+// @route   POST /api/v1/auth/forgotPassword
+// @access  Public
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  // 1) Get user by email
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with this email ${req.body.email}`)
+    );
+  }
+  // 2) If user exist, Generate reset random 6 digits and save it in DB
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashResetCode = crypto
+    .createHash('sha256')
+    .update(resetCode)
+    .digest('hex');
+
+  // Save hashed password reset code into DB
+  user.passwordResetCode = hashResetCode;
+  // Add expiration time for password reset code (10 minute)
+  user.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  user.passwordResetVerified = false;
+
+  await user.save();
+
+  const message = `${user.name}, \n We received a request to reset the password on your Roshetet 3elag Account. \n ${resetCode} \n Enter this code to complete the reset \n Thanks for helping us keep your account secure. \n The Roshetet 3elag Team`;
+  // 3) Send the reset code via email
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'Your password reset code (valid for 10 minute',
+      message,
+    });
+  } catch (err) {
+    user.passwordResetCode = undefined;
+    user.passwordResetExpires = undefined;
+    user.passwordResetVerified = undefined;
+
+    await user.save();
+    return next(new ApiError('There is an error in sending to email', 500));
+  }
+
+  res
+    .status(200)
+    .json({ status: 'Success', message: ' Reset code sent to email' });
+});
+
+// @desc    Verify password reset code
+// @route   POST /api/v1/auth/verifyResetCode
+// @access  Public
+exports.verifyPassRestCode = asyncHandler(async (req, res, next) => {
+  // 1) Get user based in reset code
+  const hashResetCode = crypto
+    .createHash('sha256')
+    .update(req.body.resetCode)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetCode: hashResetCode,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!user) {
+    return next(new ApiError('Reset code invalid or expired'));
+  }
+
+  // 2) Reset code valid
+  user.passwordResetVerified = true;
+  await user.save();
+
+  res.status(200).json({
+    status: 'Confirmation succeeded',
+  });
+});
+
+// @desc    Reset password
+// @route   POST /api/v1/auth/resetPassword
+// @access  Public
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // 2) Get user based in email
+  const user = User.findOne({ email: req.body.email });
+  if (!user) {
+    return next(
+      new ApiError(`There is no user with email ${req.body.email}`, 404)
+    );
+  }
+
+  // 2) Check if user code verfied
+  if (!user.passwordResetVerified) {
+    return next(new ApiError('Reset code not verfied', 400));
+  }
+
+  user.password = req.body.newPassword;
+  user.passwordResetCode = undefined;
+  user.passwordResetExpires = undefined;
+  user.passwordResetVerified = undefined;
+
+  await user.save();
+
+  // 3) if everything is ok, generat token
+
+  const token = generateToken(user._id);
+  res.status(200).json({ token });
+});
