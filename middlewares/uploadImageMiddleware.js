@@ -11,7 +11,7 @@ const multerOptions = () => {
   //   filename: function (req, file, cb) {
   //     // category-${id}-Date.now()-ext
   //     const ext = file.mimetype.split('/')[1];
-  //     const filename = `category-${uuidv4()}-${Date.now()}.${ext}`;
+  //     const filename = `category-${Date.now()}.${ext}`;
   //     cb(null, filename);
   //   },
   // });

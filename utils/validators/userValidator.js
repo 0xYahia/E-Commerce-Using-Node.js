@@ -161,15 +161,12 @@ exports.changeUserPasswordValidator = [
       // 1) Verfiy current password
       const user = await User.findById({ _id: req.params.id });
       if (!user) {
-        throw new Error('Ther is no user for this id');
+        throw new Error('There is no user for this id');
       }
       const isCorrectPassword = await bcrypt.compare(
         req.body.currentPassword,
         user.password
       );
-      console.log(req.body.currentPassword);
-      console.log(req.body.password);
-      console.log(req.body.isCorrectPassword);
       if (!isCorrectPassword) {
         throw new Error('Incorrect current password');
       }
@@ -185,5 +182,81 @@ exports.changeUserPasswordValidator = [
 
 exports.deleteUserValidator = [
   check('id').isMongoId().withMessage('Invalid User id format'),
+  validatorMiddleware,
+];
+
+exports.updateLoggedUserPasswordValidator = [
+  body('currentPassword')
+    .notEmpty()
+    .withMessage('You must enter your current password'),
+  body('passwordConfirm')
+    .notEmpty()
+    .withMessage('You must enter the password confirm'),
+  check('password')
+    .notEmpty()
+    .withMessage('You must enter new password')
+    .custom(async (val, { req }) => {
+      // 1) Verfiy current password
+      const isCorrectPassword = await bcrypt.compare(
+        req.body.currentPassword,
+        req.user.password
+      );
+      if (!isCorrectPassword) {
+        throw new Error('Incorrect current password');
+      }
+
+      //2) Verfiy password confirm
+      if (val !== req.body.passwordConfirm) {
+        throw new Error('Password Confirmation incorrect');
+      }
+      return true;
+    }),
+  validatorMiddleware,
+];
+
+exports.updateLoggedUserDataValidator = [
+  body('name')
+    .optional()
+    .isLength({ min: 3 })
+    .withMessage('Too short name')
+    .custom((val, { req }) => {
+      req.body.slug = slugify(val);
+      return true;
+    }),
+  check('email')
+    .optional()
+    .isEmail()
+    .withMessage('Invalid email address')
+    .custom(async (val) => {
+      const user = await User.findOne({ email: val });
+      if (user) {
+        throw new Error('E-mail already in used');
+      }
+      return true;
+    }),
+
+  check('phone')
+    .optional()
+    .isMobilePhone([
+      'am-AM',
+      'ar-AE',
+      'ar-BH',
+      'ar-DZ',
+      'ar-EG',
+      'ar-IQ',
+      'ar-JO',
+      'ar-KW',
+      'ar-LB',
+      'ar-LY',
+      'ar-MA',
+      'ar-OM',
+      'ar-PS',
+      'ar-SA',
+      'ar-SY',
+      'ar-TN',
+      'en-US',
+    ]),
+  body('profileImg').optional(),
+
   validatorMiddleware,
 ];

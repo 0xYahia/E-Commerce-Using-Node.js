@@ -6,7 +6,7 @@ const {
   getReview,
   updateReview,
   deleteReview,
-} = require('../services/reviewdService');
+} = require('../services/reviewService');
 // const {
 //   getBrandValidator,
 //   createBrandValidator,
@@ -14,9 +14,22 @@ const {
 //   deleteBrandValidator,
 // } = require('../utlis/validators/brandValidator');
 
+const authService = require('../services/authService');
+
 const router = express.Router();
 
-router.route('/').get(getReviews).post(createReview);
-router.route('/:id').get(getReview).put(updateReview).delete(deleteReview);
+router
+  .route('/')
+  .get(getReviews)
+  .post(authService.protect, authService.allowedTo('user'), createReview);
+router
+  .route('/:id')
+  .get(getReview)
+  .put(authService.protect, authService.allowedTo('user'), updateReview)
+  .delete(
+    authService.protect,
+    authService.allowedTo('user', 'manager', 'admin'),
+    deleteReview
+  );
 
 module.exports = router;
