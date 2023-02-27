@@ -6,22 +6,22 @@ const factory = require('./handlerFactory');
 // @access Public
 exports.getReviews = factory.getAll(Review);
 
-// @des Get specific brand by Id
+// @des Get specific review by Id
 // @route GET /api/v1/reviews/:id
 // @access Public
 exports.getReview = factory.getOne(Review);
 
-// @des Create brand
+// @des Create review
 // @route POST /api/v1/reviews
-// @access Private/Protect/User
+// @access Protect/User
 exports.createReview = factory.createOne(Review);
 
-// @des update specific brand by Id
+// @des update specific review by Id
 // @route PUT /api/v1/reviews/:id
-// @access Private/Protect/User
+// @access Protect/User
 exports.updateReview = factory.updateOne(Review);
 
-// @des delete specific brand by Id
+// @des delete specific review by Id
 // @route DELETE /api/v1/reviews/:id
-// @access Private/Protect/User-Admin-Manager
+// @access Protect/User-Admin-Manager
 exports.deleteReview = factory.deleteOne(Review);
