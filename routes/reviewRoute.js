@@ -6,29 +6,43 @@ const {
   getReview,
   updateReview,
   deleteReview,
+  setCategoryIdToBody,
+  cerateFilterObj,
 } = require('../services/reviewService');
-// const {
-//   getBrandValidator,
-//   createBrandValidator,
-//   updateBrandValidator,
-//   deleteBrandValidator,
-// } = require('../utlis/validators/brandValidator');
 
 const authService = require('../services/authService');
+const {
+  createReviewValidator,
+  updateReviewValidator,
+  getReviewValidator,
+  deleteReviewValidator,
+} = require('../utils/validators/reviewValidator');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router
   .route('/')
-  .get(getReviews)
-  .post(authService.protect, authService.allowedTo('user'), createReview);
+  .get(cerateFilterObj, getReviews)
+  .post(
+    authService.protect,
+    authService.allowedTo('user'),
+    setCategoryIdToBody,
+    createReviewValidator,
+    createReview
+  );
 router
   .route('/:id')
-  .get(getReview)
-  .put(authService.protect, authService.allowedTo('user'), updateReview)
+  .get(getReviewValidator, getReview)
+  .put(
+    authService.protect,
+    authService.allowedTo('user'),
+    updateReviewValidator,
+    updateReview
+  )
   .delete(
     authService.protect,
     authService.allowedTo('user', 'manager', 'admin'),
+    deleteReviewValidator,
     deleteReview
   );
 
