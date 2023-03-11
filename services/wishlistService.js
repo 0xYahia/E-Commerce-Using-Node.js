@@ -28,11 +28,11 @@ exports.removeProductFromWishlist = asyncHandler(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     {
-      $pull: { wishlist: req.body.productId },
+      $pull: { wishlist: req.params.productId },
     },
     { new: true }
   );
-  res.status(204).json({
+  res.status(200).json({
     status: 'success',
     message: 'Product removed successfully from your wishlist',
     data: user.wishlist,

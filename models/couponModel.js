@@ -13,7 +13,7 @@ const couponSchema = new mongoose.Schema(
       required: [true, 'Coupon expire time required'],
     },
     discount: {
-      tyoe: Number,
+      type: Number,
       required: [true, 'Coupon discount value required'],
     },
   },
