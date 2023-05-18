@@ -6,8 +6,8 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Product title must be required'],
       trim: true,
-      minLenth: [3, 'Too short product title'],
-      maxLenth: [100, 'Too long product title'],
+      minLength: [3, 'Too short product title'],
+      maxLength: [100, 'Too long product title'],
     },
     slug: {
       type: String,
@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
     description: {
       type: String,
       required: [true, 'Product description must be required'],
-      minLenth: [100, 'Too short product description'],
+      minLength: [100, 'Too short product description'],
     },
     quantity: {
       type: Number,
