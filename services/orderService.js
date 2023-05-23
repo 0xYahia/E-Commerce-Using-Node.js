@@ -1,6 +1,5 @@
 const asyncHandler = require('express-async-handler');
 
-const factory = require('./handlerFactory');
 const ApiError = require('../utils/apiError');
 const Product = require('../models/productModel');
 const Cart = require('../models/cartModel');
@@ -17,7 +16,7 @@ exports.createCashOrder = asyncHandler(async (req, res, next) => {
   const cart = await Cart.findById(req.params.cartId);
   if (!cart) {
     return next(
-      new Error(`There is no such cart with id ${req.body.cartId}`, 404)
+      new ApiError(`There is no such cart with id ${req.body.cartId}`, 404)
     );
   }
   // 2) Get order price depend on cart price "Check if coupon apply"

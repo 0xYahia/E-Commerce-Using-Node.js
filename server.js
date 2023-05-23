@@ -12,7 +12,7 @@ const dbConnection = require('./config/database');
 // Routes
 const mountRoutes = require('./routes');
 
-// Connet with DB
+// Connect with DB
 dbConnection();
 
 // express app
