@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = new mongoose.OrderShcema(
+const orderSchema = new mongoose.Shcema(
   {
     user: {
       type: mongoose.Types.ObjectId,
