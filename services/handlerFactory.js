@@ -69,7 +69,7 @@ exports.getAll = (Model) =>
       .sort()
       .limitFields();
 
-    // Execute qurey
+    // Execute query
     const { mongooseQuery, paginationResult } = apiFeatures;
     const documents = await mongooseQuery;
 
