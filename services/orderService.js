@@ -64,3 +64,5 @@ exports.getAllOrders = factory.getAll(Order);
 // @route  POST /api/v1/orders/id
 // @access Private/User-Admin
 exports.getSpecificOrder = factory.getOne(Order);
+
+// don't forget validate for specific order
