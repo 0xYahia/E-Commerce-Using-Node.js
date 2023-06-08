@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    // child referance (one to many)
+    // child reference (one to many)
     wishlist: [
       {
         type: mongoose.Schema.ObjectId,
